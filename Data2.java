@@ -1,3 +1,7 @@
+import javax.xml.crypto.Data;
+import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+
 public class Data2 {
         private byte dia, mes;
         private short ano;
@@ -103,63 +107,53 @@ public class Data2 {
                 }
             }
         }
-
-       public void avancaVariosDias(int n) {
-           for (int i = 0; i < n; i++) {
-               this.dia++;
-               if (!Data2.validaData(this.dia, this.mes, this.ano)) {
-                   if (!Data2.isBissexto(this.ano) && this.dia == 29 && this.mes == 2) {
-                       continue;
-                   }
-                   if ((this.dia>4 && this.dia<14) && this.mes==10 && this.ano==1582){
-                       this.dia=(byte)15;
-                       continue;
-                   }
-                   this.dia = (byte) 1;
-                   this.mes++;
-               }
-               if (!Data2.validaData(this.dia, this.mes, this.ano)) {
-                   this.dia = (byte) 1;
-                   this.mes = (byte) 1;
-                   this.ano++;
-               }
-           }
-       }
-
         public Data2 getVariosDiasAdiante (int n) throws Exception{
+            Data2 date = null;
+            try{
+                date = new Data2(this.dia,this.mes,this.ano);
+            }catch (Exception ignored){}
 
-            Data2 oth = null;
-            try {
-                if (!Data2.validaData(dia,mes,ano));
-                oth = new Data2(this.dia,this.mes,this.ano);
-
-                int[] vetor = new int[n];
-                for ( int i = 0; i<n; i++) {
-                    vetor[i] = oth.dia;
-                    if (!Data2.validaData(oth.dia, oth.mes, oth.ano)) {
-                        if (!Data2.isBissexto(oth.ano) && oth.mes == 2 && oth.dia == 29) {
-                            continue;
+            for ( int i = 0; i<n; i++) {
+                if ((date.dia > 4 && date.dia < 14) && date.mes == 10 && date.ano == 1582) {
+                    return new Data2((byte)15, date.mes, date.ano);
+                }
+                ifelse {
+                    try {
+                        //return new Data2(date.dia, date.mes, date.ano);
+                    } catch (Exception err1) {
+                        try {
+                            return new Data2((byte) 1, date.mes++, date.ano);
+                        } catch (Exception err2) {
+                            return new Data2((byte) 1,(byte) 1, date.ano++);
                         }
-                        if ((oth.dia > 4 && oth.dia < 14) && oth.mes == 10 && oth.ano == 1582) {
-                            oth.dia = (byte) 15;
-                            continue;
-                        }
-                        oth.dia = (byte) 1;
-                        oth.mes++;
-                    }
-                    if (!Data2.validaData(oth.dia, oth.mes, oth.ano)) {
-                        oth.dia = (byte) 1;
-                        oth.mes = (byte) 1;
-                        oth.ano++;
                     }
                 }
-            }catch (Exception err){
-                throw new Exception("Invalid Date!");
+                date.dia++;
             }
-            System.out.println(oth+"teste");
-            return oth;
+            return new Data2(date.dia,date.mes,date.ano);
         }
 
+    public void avancaVariosDias(int n) {
+        for (int i = 0; i < n; i++) {
+            this.dia++;
+            if (!Data2.validaData(this.dia, this.mes, this.ano)) {
+                if (!Data2.isBissexto(this.ano) && this.dia == 29 && this.mes == 2) {
+                    continue;
+                }
+                if ((this.dia>4 && this.dia<14) && this.mes==10 && this.ano==1582){
+                    this.dia=(byte)15;
+                    continue;
+                }
+                this.dia = (byte) 1;
+                this.mes++;
+            }
+            if (!Data2.validaData(this.dia, this.mes, this.ano)) {
+                this.dia = (byte) 1;
+                this.mes = (byte) 1;
+                this.ano++;
+            }
+        }
+    }
 
         @Override
         public String toString(){
