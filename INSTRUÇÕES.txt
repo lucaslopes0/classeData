@@ -1,0 +1,26 @@
+fazer uma classe data
+-primeiro método verifica se é bissexto no calendário juliano
+-segundo método valida a data digitada com base nesse calendário
+	-anos menores de 45aC não funcionam 
+	-fevereiro só tem 29 dias se o ano for bissexto
+	-fevereiro não tem mais de 29 dias
+	-não existe ano zero, do 1 aC vai para 1 dC
+	-janeiro, março, maio, julho, agosto, outubro, dezembro tem 31 dias
+	-abril, junho, setembro, novembro tem 30 dias
+
+	-faz um Construtor
+	-faz um método setDia
+	-faz um método getDia
+	-faz um método setMes
+	-faz um método getMes
+	-faz um método setAno
+	-faz um método getAno
+	-faz um método avanca um dia
+	-faz um método getdiaSeguinte
+	-faz um método avanca Vários dias
+-faz um método Get Vários dias adiante
+-faz um método volta um dia
+-faz um método getDiaAneterior
+-faz um método Volta Varios Dias
+-faz um método Get Vários Dias Atras
+-faz um método Clone

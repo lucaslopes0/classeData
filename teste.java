@@ -4,15 +4,15 @@ public class teste {
         int[] vetor = criarVetorContagem(n);
 
         // Imprime o vetor
-        for (int i = 0; i < vetor.length; i++) {
-            System.out.print(vetor[i] + " ");
+        for (int j : vetor) {
+            System.out.print(j + " ");
         }
     }
 
     public static int[] criarVetorContagem(int n) {
-        int vetor[] = new int[n + 1];
-        for (int i = 0; i <= n; i++) {
-            vetor[i] = i;
+        int[] vetor = new int[n];
+        for (int i = 0; i < n; i++) {
+            vetor[i] = i+1;
         }
         return vetor;
     }

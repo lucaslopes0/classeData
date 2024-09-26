@@ -126,31 +126,38 @@ public class Data2 {
            }
        }
 
-        public int[] getVariosDias(int n) throws Exception{
-            int[] vetor = new int[n + 1];
-            for ( int i = 0; i<=n; i++) {
-                this.dia++;
-                vetor[i] = this.dia;
-                if (!Data2.validaData(this.dia, this.mes, this.ano)) {
-                    if (!Data2.isBissexto(this.ano) && this.mes == 2 && this.dia == 29) {
-                        continue;
-                    }
-                    if ((this.dia > 4 && this.dia < 14) && this.mes == 10 && this.ano == 1582) {
-                        this.dia = (byte) 15;
-                        continue;
-                    }
-                    this.dia = (byte) 1;
-                    this.mes++;
-                }
-                if (!Data2.validaData(this.dia, this.mes, this.ano)) {
-                    this.dia = (byte) 1;
-                    this.mes = (byte) 1;
-                    this.ano++;
-                }
+        public Data2 getVariosDiasAdiante (int n) throws Exception{
 
+            Data2 oth = null;
+            try {
+                if (!Data2.validaData(dia,mes,ano));
+                oth = new Data2(this.dia,this.mes,this.ano);
+
+                int[] vetor = new int[n];
+                for ( int i = 0; i<n; i++) {
+                    vetor[i] = oth.dia;
+                    if (!Data2.validaData(oth.dia, oth.mes, oth.ano)) {
+                        if (!Data2.isBissexto(oth.ano) && oth.mes == 2 && oth.dia == 29) {
+                            continue;
+                        }
+                        if ((oth.dia > 4 && oth.dia < 14) && oth.mes == 10 && oth.ano == 1582) {
+                            oth.dia = (byte) 15;
+                            continue;
+                        }
+                        oth.dia = (byte) 1;
+                        oth.mes++;
+                    }
+                    if (!Data2.validaData(oth.dia, oth.mes, oth.ano)) {
+                        oth.dia = (byte) 1;
+                        oth.mes = (byte) 1;
+                        oth.ano++;
+                    }
+                }
+            }catch (Exception err){
+                throw new Exception("Invalid Date!");
             }
-            return vetor;
-
+            System.out.println(oth+"teste");
+            return oth;
         }
 
 
