@@ -7,26 +7,28 @@ public class principal {
 
             System.out.println("A data padrão do construtor é: " + dat.getDia()+"/"+dat.getMes()+"/"+dat.getAno()+".");
 
-            dat.setDia((byte)30);
-            dat.setMes((byte)12);
+            dat.setDia((byte)29);
+            dat.setMes((byte)2);
             dat.setAno((short)2000);
 
             System.out.printf("A data setada pelo usuário é: %d/%d/%d\n",
                     dat.getDia(),dat.getMes(),dat.getAno());
 
-            System.out.println("\nO dia seguinte da data setada é: "+dat.getDiaSeguinte());
+            int avanc = 5;
 
+            dat.avancaVariosDias(avanc);
 
-            dat.avancaVariosDias(1);
+            System.out.println("\nA data avançou em "+ avanc + " dias," + "então a nova data é: " +dat.getDia()+"/"+dat.getMes()+"/"+dat.getAno());
 
-            System.out.printf("\nA data avançou para: " + "%d/%d/%d\n", dat.getDia(),dat.getMes(),dat.getAno());
+            dat.retrocedeUmDia();
 
-            System.out.println("\ngetVariosDiasAdiante: "+ dat.getVariosDiasAdiante(1));
-            //dat.getVariosDiasAdiante(qtddias);
+            System.out.printf("\nA data retrocedeu um dia, então agora a nova data é: %d/%d/%d\n", dat.getDia(),dat.getMes(),dat.getAno());
 
-            System.out.printf("\nA nova data agora é: %d/%d/%d\n",
-                    dat.getDia(),dat.getMes(),dat.getAno());
+            System.out.println("\nO dia seguinte da data setada será: "+dat.getDiaSeguinte());
 
+            System.out.println("\nO dia anterior da data setada foi: "+dat.getDiaAnterior());
+
+            System.out.println("\nA data daqui "+avanc+" dias é: " + dat.getVariosDiasAdiante(avanc));
 
 
         }catch(Exception error){

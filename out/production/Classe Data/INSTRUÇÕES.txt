@@ -18,9 +18,9 @@ fazer uma classe data
 	-faz um método avanca um dia
 	-faz um método getdiaSeguinte
 	-faz um método avanca Vários dias
--faz um método Get Vários dias adiante
--faz um método volta um dia
--faz um método getDiaAneterior
+    -faz um método Get Vários dias adiante
+    -faz um método volta um dia
+-faz um método getDiaAnterior
 -faz um método Volta Varios Dias
 -faz um método Get Vários Dias Atras
 -faz um método Clone
