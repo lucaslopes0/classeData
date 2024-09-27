@@ -117,7 +117,7 @@ public class Data2 {
                 if ((date.dia > 4 && date.dia < 14) && date.mes == 10 && date.ano == 1582) {
                     return new Data2((byte)15, date.mes, date.ano);
                 }
-                ifelse {
+                else{
                     try {
                         //return new Data2(date.dia, date.mes, date.ano);
                     } catch (Exception err1) {
