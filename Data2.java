@@ -1,8 +1,4 @@
-import javax.xml.crypto.Data;
-import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
-
-public class Data2 {
+public class Data2 implements Cloneable{
     private byte dia, mes;
     private short ano;
 
@@ -21,15 +17,20 @@ public class Data2 {
         return ano % 4 == 0;
     }
 
-    public static boolean isDataValida(byte dia, byte mes, short ano) {
-        if (ano == 0 || ano < -45) return false;
+    public static boolean isDataValida(short ano, byte mes, byte dia) {
+        if (ano < -45) return false;
+        if (ano == 0) return false;
         if ((mes < 1 || mes > 12) || (dia < 1 || dia > 31)) return false;
+
+        if (mes == 2 && dia > 29) return false;
 
         if (mes == 2) {
             if (isBissexto(ano)) {
-                if (dia<=29) return true;
-            } else {
-                if (dia<=28) return true;
+                if (dia <= 29) return true;
+                else return false;
+            } else if (!isBissexto(ano)) {
+                if (dia <= 28) return true;
+                else return false;
             }
         }
 
@@ -40,38 +41,16 @@ public class Data2 {
         return true;
     }
 
-    public Data2(byte dia, byte mes, short ano) throws Exception {
-        if (!Data2.isDataValida(dia, mes, ano))
+    public Data2(short ano, byte mes, byte dia) throws Exception {
+        if (!Data2.isDataValida(ano, mes, dia))
             throw new Exception("Invalid Date!");
         this.dia = dia;
         this.mes = mes;
         this.ano = ano;
     }
 
-    public void setDia(byte dia) throws Exception {
-        if (!Data2.isDataValida(dia, this.mes, this.ano)) {
-            throw new Exception("Invalid Date!");
-        }
-        this.dia = dia;
-    }
-
-    public byte getDia() {
-        return this.dia;
-    }
-
-    public void setMes(byte mes) throws Exception {
-        if (!Data2.isDataValida(this.dia, mes, this.ano)) {
-            throw new Exception("Invalid Date!");
-        }
-        this.mes = mes;
-    }
-
-    public byte getMes() {
-        return this.mes;
-    }
-
     public void setAno(short ano) throws Exception {
-        if (!Data2.isDataValida(this.dia, this.mes, ano)) {
+        if (!Data2.isDataValida(ano, this.mes, this.dia)) {
             throw new Exception("Invalid Date!");
         }
         this.ano = ano;
@@ -81,20 +60,42 @@ public class Data2 {
         return this.ano;
     }
 
+    public void setMes(byte mes) throws Exception {
+        if (!Data2.isDataValida(this.ano, mes, this.dia)) {
+            throw new Exception("Invalid Date!");
+        }
+        this.mes = mes;
+    }
+
+    public byte getMes() {
+        return this.mes;
+    }
+
+    public void setDia(byte dia) throws Exception {
+        if (!Data2.isDataValida(this.ano, this.mes, dia)) {
+            throw new Exception("Invalid Date!");
+        }
+        this.dia = dia;
+    }
+
+    public byte getDia() {
+        return this.dia;
+    }
+
     public Data2 getDiaSeguinte() throws Exception {
         if (this.ano == 1582 && this.mes == 10 && this.dia == 4) {
-            return new Data2((byte) 15, this.mes, this.ano);
+            return new Data2(this.ano, this.mes, (byte) 15);
         } else {
             try {
-                return new Data2((byte) (this.dia + 1), this.mes, this.ano);
+                return new Data2(this.ano, this.mes, (byte) (this.dia + 1));
             } catch (Exception erro1) {
                 try {
-                    return new Data2((byte) 1, (byte) (this.mes + 1), this.ano);
+                    return new Data2(this.ano, (byte) (this.mes + 1), (byte) 1);
                 } catch (Exception erro2) {
                     try {
-                        return new Data2((byte) 1, (byte) 1, (short) (this.ano + 1));
+                        return new Data2((short) (this.ano + 1), (byte) 1, (byte) 1);
                     } catch (Exception erro3) {
-                        return new Data2((byte) 1, (byte) 1, (short) (this.ano + 2));
+                        return new Data2((short) (this.ano + 2), (byte) 1, (byte) 1);
                     }
                 }
             }
@@ -103,18 +104,18 @@ public class Data2 {
 
     public Data2 getDiaAnterior() throws Exception {
         if (this.ano == 1582 && this.mes == 10 && this.dia == 15)
-            return new Data2(this.dia = (byte) 4,this.mes,this.ano);
+            return new Data2(this.ano, this.mes, this.dia = (byte) 4);
         else {
             try {
-                return new Data2((byte)(this.dia - 1), this.mes, this.ano);
-            }catch (Exception err1){
+                return new Data2(this.ano, this.mes, (byte) (this.dia - 1));
+            } catch (Exception err1) {
                 try {
-                    return new Data2(this.dia, (byte)(this.mes - 1), this.ano);
-                }catch (Exception err2){
+                    return new Data2(this.ano, (byte) (this.mes - 1), this.dia);
+                } catch (Exception err2) {
                     try {
-                        return new Data2(this.dia, this.mes ,(short)(this.ano - 1));
-                    }catch (Exception err3){
-                        return new Data2(this.dia, this.mes ,(short)(this.ano - 2));
+                        return new Data2((short) (this.ano - 1), this.mes, this.dia);
+                    } catch (Exception err3) {
+                        return new Data2((short) (this.ano - 2), this.mes, this.dia);
                     }
                 }
             }
@@ -123,77 +124,51 @@ public class Data2 {
 
     public Data2 getVariosDiasAdiante(int n) throws Exception {
 
-        Data2 date = null;
-        try {
-            date = new Data2(this.dia, this.mes, this.ano);
-        } catch (Exception ignored) {}
+        Data2 date = this.clone();
 
         for (int i = 0; i < n; i++) {
-            if ((date.dia > 4 && date.dia < 14) && date.mes == 10 && date.ano == 1582) {
-                return new Data2((byte) 15, date.mes, date.ano);
-            } else {
-                try {
-                    date.dia++;
-                } catch (Exception err1) {
-                    try {
-                        return new Data2((byte) 1, date.mes++, date.ano);
-                    } catch (Exception err2) {
-                        return new Data2((byte) 1, (byte) 1, date.ano++);
-                    }
-                }
-
-            }
-
+            date = date.getDiaSeguinte();
         }
-        return new Data2(date.dia, date.mes, date.ano);
+        return date;
     }
 
-    public void avancaUmDia() {
-        if (this.dia == 31 && this.mes == 12 && this.ano == -1) {
-            this.dia = (byte) 1;
-            this.mes = (byte) 1;
-            this.ano = (short) 1;
-        } else if (this.ano == 1582 && this.mes == 10 && this.dia == 4)
+    public Data2 getVariosDiasAtras(int n) throws Exception{
+        Data2 date = this.clone();
+
+        for (int i = 0; i < n; i++) {
+            date = date.getDiaAnterior();
+        }
+        return date;
+    }
+
+    public void avancaUmDia () {
+        if (this.ano == 1582 && this.mes == 10 && this.dia == 4)
             this.dia = (byte) 15;
 
-        else if (Data2.isDataValida((byte) (this.dia + 1), this.mes, this.ano)) {
+        else if (Data2.isDataValida(this.ano, this.mes, (byte) (this.dia + 1))) {
             this.dia++;
-        } else if (Data2.isDataValida(this.dia, (byte) (this.mes + 1), this.ano)) {
+        } else if (Data2.isDataValida(this.ano, (byte) (this.mes + 1), (byte) 1)) {
             this.dia = (byte) 1;
             this.mes++;
-        } else {
+        } else if (Data2.isDataValida((short) (this.ano + 1), this.mes, this.dia)) {
             this.dia = (byte) 1;
             this.mes = (byte) 1;
             this.ano++;
+        } else if (Data2.isDataValida((short) (this.ano + 2), this.mes, this.dia)) {
+            this.dia = (byte) 1;
+            this.mes = (byte) 1;
+            this.ano = (short) (this.ano + 2);
         }
     }
 
-
-    //arrumar o avancaVariosDias
-    public void avancaVariosDias(int n) {
+    public void avancaVariosDias ( int n){
         for (int i = 0; i < n; i++) {
-            this.dia++;
-            if (!Data2.isDataValida(this.dia, this.mes, this.ano)) {
-                if (!Data2.isBissexto(this.ano) && this.dia == 29 && this.mes == 2) {
-                    continue;
-                }
-                if ((this.dia>4 && this.dia<14) && this.mes==10 && this.ano==1582){
-                    this.dia=(byte)15;
-                    continue;
-                }
-                this.dia = (byte) 1;
-                this.mes++;
-            }
-            if (!Data2.isDataValida(this.dia, this.mes, this.ano)) {
-                this.dia = (byte) 1;
-                this.mes = (byte) 1;
-                this.ano++;
-            }
+            this.avancaUmDia();
+
         }
     }
 
-
-    public void retrocedeUmDia() {
+    public void retrocedeUmDia () {
         if (this.dia == 15 && this.mes == 10 && this.ano == 1582) {
             this.dia = (byte) 4;
         } else if (this.dia == 1 && this.mes == 1 && this.ano == 1) {
@@ -201,41 +176,83 @@ public class Data2 {
             this.mes = (byte) 12;
             this.ano = (byte) -1;
         }
-        if (Data2.isDataValida((byte)(this.dia - 1), this.mes, this.ano)) {
+        if (Data2.isDataValida(this.ano, this.mes, (byte) (this.dia - 1))) {
             this.dia--;
-        }
-        else if (Data2.isDataValida(this.dia, (byte) (this.mes - 1), this.ano)) {
-            if ((byte)(this.mes-1) == 2){
-                if (Data2.isBissexto(this.ano)){
+        } else if (Data2.isDataValida(this.ano, (byte) (this.mes - 1), this.dia)) {
+            if ((byte) (this.mes - 1) == 2) {
+                if (Data2.isBissexto(this.ano)) {
                     this.dia = (byte) 29;
-                }
-                else {
+                } else {
                     this.dia = (byte) 28;
                 }
-            }else {
+            } else {
                 this.dia = (byte) 31;
-                if (!Data2.isDataValida(this.dia, (byte) (this.mes - 1), this.ano)) {
+                if (!Data2.isDataValida(this.ano, (byte) (this.mes - 1), this.dia)) {
                     this.dia = (byte) 30;
                 }
             }
             this.mes--;
-        }
-        else if (Data2.isDataValida(this.dia, this.mes, (short) (this.ano - 1))) {
+        } else if (Data2.isDataValida((short) (this.ano - 1), this.mes, this.dia)) {
             this.dia = (byte) 31;
             this.mes = (byte) 12;
             this.ano--;
         }
     }
-    @Override
-    public String toString(){
-        return    (this.dia<10?"0":"")
-                + this.dia + "/"
-                + (this.mes<10?"0":"")
-                + this.mes+ "/"
-                + (this.ano>0 && this.ano<10?"0":"")
-                + (this.ano<0?(-this.ano+" aC"):this.ano);
+
+    public void retrocedeVariosDias ( int n){
+        for (int i = 0; i < n; i++) {
+            this.retrocedeUmDia();
+        }
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj) return true;
+
+        if(obj == null) return false;
+
+        if(obj.getClass() != this.getClass()) return false;
+
+        Data2 oth = (Data2)obj;
+
+        if (oth.dia != this.dia) return false;
+        if (oth.mes != this.mes) return false;
+        if (oth.ano != this.ano) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode(){
+        int hs =1;
+        hs = hs*11+ Short.valueOf(this.ano).hashCode();
+        hs = hs*11+ Byte.valueOf(this.mes).hashCode();
+        hs = hs*11+ Byte.valueOf(this.dia).hashCode();
+
+        if(hs<0) hs=-hs;
+
+        return hs;
+    }
+
+    @Override
+    public Data2 clone(){
+        Data2 date = null;
+        try{
+            date= new Data2(this.ano,this.mes,this.dia);
+        }catch (Exception ignored){}
+        return date;
+    }
+
+    @Override
+    public String toString () {
+        return (this.dia < 10 ? "0" : "")
+                + this.dia + "/"
+                + (this.mes < 10 ? "0" : "")
+                + this.mes + "/"
+                + (this.ano > 0 && this.ano < 10 ? "0" : "")
+                + (this.ano < 0 ? (-this.ano + " aC") : this.ano);
+    }
 }
+
 
 
